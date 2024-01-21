@@ -1,0 +1,2 @@
+# minesweepers
+The minesweeper experiment
