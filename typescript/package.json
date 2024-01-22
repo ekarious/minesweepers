@@ -1,0 +1,41 @@
+{
+  "name": "minesweeper-ts",
+  "version": "1.2.0",
+  "description": "Mine Sweeper - Typescript",
+  "type": "module",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "jest",
+    "lint": "eslint",
+    "check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kitefr/minesweeper-ts.git"
+  },
+  "keywords": [
+    "typescript",
+    "minesweeper",
+    "games",
+    "classic",
+    "vite"
+  ],
+  "author": {
+    "name": "Yann Schmidt",
+    "email": "contact@yannschmidt.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kitefr/minesweeper-ts/issues"
+  },
+  "homepage": "https://github.com/Kitefr/minesweeper-ts#readme",
+  "devDependencies": {
+    "sass": "^1.69.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10"
+  },
+  "dependencies": {}
+}
