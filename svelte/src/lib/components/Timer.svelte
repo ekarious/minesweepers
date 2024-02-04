@@ -25,11 +25,11 @@
 <style lang="scss">
   div {
     font-size: 1.5rem;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    color: #b6bdc2;
+    transition: color 0.3s ease-in-out;
 
     &.active {
-      opacity: 1;
+      color: #000;
     }
 
     &.stopped {

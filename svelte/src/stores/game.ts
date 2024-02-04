@@ -1,10 +1,27 @@
-import { readable, type Writable, writable } from 'svelte/store';
+import { derived, readable, type Writable, writable } from 'svelte/store';
+import type { gameStates, gameDifficulties, Tile } from '../types';
+import { randomNbMines } from '$lib/utils/tiles';
 
 export const gameDifficulty: Writable<gameDifficulties> = writable('easy');
 export const gameState: Writable<gameStates> = writable('ready');
 
-export type gameDifficulties = 'easy' | 'normal' | 'hard' | 'custom';
-export type gameStates = 'ready' | 'ongoing' | 'paused' | 'won' | 'lost';
+export const isGamePaused = derived(gameState, ($gameState) => $gameState === 'paused');
+
+// Board & Tiles
+export const boardSize: Writable<{ x: number; y: number }> = writable({ x: 10, y: 10 });
+export const boardData: Writable<Tile[]> = writable([]);
+export const boardMinesCount = writable(0);
+
+export const tileHover: Writable<Tile | null> = writable(null);
+
+export const colors = writable({
+  success: '#64db98',
+  failure: '#fa5161',
+  tiles: {
+    odd: '#dcc6e6',
+    even: '#b8dbf2'
+  }
+});
 
 function createTimer() {
   const { subscribe, set, update } = writable(0);
@@ -31,7 +48,8 @@ function createTimer() {
     set,
     update,
     start: () => unsubscribe = time.subscribe(t => set(t)),
-    pause: () => {},
+    pause: () => {
+    },
     stop: () => {
       if (unsubscribe) {
         unsubscribe();
@@ -40,7 +58,8 @@ function createTimer() {
     },
     reset: () => {
       if (unsubscribe) {
-        stop();
+        unsubscribe();
+        unsubscribe = null;
       }
       set(0);
     }

@@ -6,13 +6,6 @@
   import Score from '$lib/components/Score.svelte';
   import { debugPanelEnabled } from '$stores/debug';
 
-  function toggleDebug() {
-    debugPanelEnabled.update(x => !x);
-  }
-
-  function handleReset(event) {
-    console.log('dispatched: timerReset', event)
-  }
 </script>
 
 <svelte:head>
@@ -40,7 +33,7 @@
   </div>
   <div>
     <p>
-      <button on:click={toggleDebug}>debug</button>
+      <button on:click={() => debugPanelEnabled.update(x => !x)}>debug</button>
     </p>
   </div>
 </footer>
@@ -48,6 +41,16 @@
 <style lang="scss">
   header {
     text-align: center;
+    height: 80px;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 200px);
   }
 
   footer {
