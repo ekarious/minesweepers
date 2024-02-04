@@ -13,11 +13,12 @@ export const tilesGenerator = (x: number, y: number, customMines: boolean = fals
   // Create Array of tiles
   const tiles: Tile[] = Array.from({ length: x * y }, (_, index) => {
     const tileCoords = getTileCoords({x, y}, index);
+    console.log(x, y, tileCoords);
 
     return {
-      id: index,
       x: tileCoords.x || 0,
       y: tileCoords.y || 0,
+      id: index,
       isRevealed: false,
       isFlagged: false,
       hasMine: false
@@ -35,7 +36,7 @@ export const tilesGenerator = (x: number, y: number, customMines: boolean = fals
 
 export function getTileCoords(boardSize: { x: number, y: number }, id: number): { x: number, y: number } {
   const vertical = (id % boardSize.x);
-  const horizontal = Math.floor(id / boardSize.y);
+  const horizontal = Math.ceil((id - 1 - vertical) / boardSize.x);
   return { x: vertical, y: horizontal }
 }
 
