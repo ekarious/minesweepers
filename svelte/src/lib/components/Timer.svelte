@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatTime } from '$lib/utils/time'
-  import { timer } from '$stores/game';
+  import { colors, gameState, timer } from '$stores/game';
   import { onDestroy } from 'svelte';
 
   let humanizedTime: string = '00:00';
@@ -18,7 +18,15 @@
   });
 </script>
 
-<div>
+<div
+  style="
+    --color-success: {$colors.success};
+    --color-failure: {$colors.failure};
+  "
+  class:active={$gameState === 'ongoing'}
+  class:won={$gameState === 'won'}
+  class:lost={$gameState === 'lost'}
+>
   {humanizedTime}
 </div>
 
@@ -32,12 +40,12 @@
       color: #000;
     }
 
-    &.stopped {
-      color: darken(#fdb4bb, 20%);
+    &.won {
+      color: var(--color-success);
     }
 
-    &.success {
-      color: darken(#b7eecf, 20%) !important;
+    &.lost {
+      color: var(--color-failure);
     }
   }
 </style>

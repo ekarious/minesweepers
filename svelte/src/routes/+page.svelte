@@ -5,7 +5,7 @@
   import Timer from '$lib/components/Timer.svelte';
   import Score from '$lib/components/Score.svelte';
   import { debugPanelEnabled } from '$stores/debug';
-
+  import { gameState } from '$stores/game';
 </script>
 
 <svelte:head>
@@ -22,7 +22,9 @@
   <Score />
 </header>
 <main>
-  <Board />
+  {#if $gameState !== 'unloaded'}
+    <Board />
+  {/if}
 </main>
 <footer>
   <div>

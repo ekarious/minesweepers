@@ -3,8 +3,12 @@
   import {
     boardData,
     boardMinesCount,
+    boardRevealed,
     boardSize,
-    gameDifficulty
+    gameDifficulty,
+    gameState,
+    score,
+    timer
   } from '$stores/game';
   import { tilesGenerator } from '$lib/utils/tiles';
   import { onDestroy } from 'svelte';
@@ -12,7 +16,6 @@
   let unsubscribe;
 
   unsubscribe = gameDifficulty.subscribe(value => {
-    console.log('game d. changed', value);
     boardData.set([]);
 
     if (value === 'easy') {
@@ -29,11 +32,44 @@
 
     setTimeout(() => {
       const bData = tilesGenerator($boardSize.x, $boardSize.y, $gameDifficulty === 'custom', $boardMinesCount);
-      console.log(bData.tiles.length)
       boardData.set(bData.tiles);
       boardMinesCount.set(bData.minesCount);
-    }, 1)
+    }, 0)
   });
+
+  unsubscribe = gameState.subscribe(value => {
+    if (value === 'unloaded') {
+      timer.reset();
+      // score.set(0);
+      boardRevealed.set(false);
+    }
+
+    if (value === 'ready') {
+      timer.reset();
+      // score.set(0);
+      boardRevealed.set(false);
+      const bData = tilesGenerator($boardSize.x, $boardSize.y, $gameDifficulty === 'custom', $boardMinesCount);
+      boardData.set(bData.tiles);
+      boardMinesCount.set(bData.minesCount);
+    }
+
+    if (value === 'ongoing') {
+      timer.start();
+      boardRevealed.set(false);
+    }
+
+    if (value === 'lost') {
+      boardRevealed.set(true);
+      timer.stop();
+    }
+
+    if (value === 'won') {
+      timer.stop();
+      boardRevealed.set(true);
+    }
+
+    boardData.set($boardData);
+  })
 
   onDestroy(() => {
     if (unsubscribe) {
@@ -43,7 +79,11 @@
   });
 </script>
 
-<div id="board" style="--x: {$boardSize.x}; --y: {$boardSize.y}">
+<div
+  id="board"
+  style="--x: {$boardSize.x}; --y: {$boardSize.y}"
+  class:disabled={$gameState === 'won' || $gameState === 'lost'}
+>
   {#each $boardData as tile (tile.id)}
     <Tile id={tile.id} {tile} />
   {/each}
@@ -55,6 +95,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     grid-template-columns: repeat(var(--x), 1fr);
     grid-template-rows: repeat(var(--y), 1fr);
+    border: 1px solid lightgray;
 
     &.disabled {
       pointer-events: none;

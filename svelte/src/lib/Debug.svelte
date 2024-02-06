@@ -24,7 +24,7 @@
     score,
     timer,
     colors,
-    boardSize, boardMinesCount, boardData, tileHover
+    boardSize, boardMinesCount, boardData, boardRevealed, showTilesID
   } from '$stores/game';
   import { formatTime } from '$lib/utils/time';
   import { onDestroy } from 'svelte';
@@ -39,9 +39,9 @@
   };
 
   const gameStates: ListOptions<gameStates> = {
+    Unloaded: 'unloaded',
     Ready: 'ready',
     Ongoing: 'ongoing',
-    Paused: 'paused',
     Won: 'won',
     Lost: 'lost'
   };
@@ -51,6 +51,7 @@
     const bData = tilesGenerator($boardSize.x, $boardSize.y, $gameDifficulty === 'custom', $boardMinesCount);
     boardData.update(_ => bData.tiles);
     boardMinesCount.update(_ => bData.minesCount);
+    gameState.set('ready');
   }
 
   // Tiles
@@ -58,7 +59,7 @@
   // Score
   function handleScoreModify(event: ButtonGridClickEvent) {
     const label = event.detail.label;
-    label === '+1' ? score.increment() : score.decrement();
+    // label === '+1' ? score.increment() : score.decrement();
   }
 
   // Timer
@@ -101,34 +102,26 @@
 
   <!-- Board -->
   <Folder title="Board" expanded={true}>
-    <Checkbox value={false} label="isRevealed" />
-    <Point bind:value={$boardSize} label="Size" picker="inline" min={0} max={50} step={1} />
-    <Separator />
+    <Checkbox bind:value={$boardRevealed} label="Reveal" />
+    <Point bind:value={$boardSize} label="Size" disabled={$gameDifficulty !== 'custom'} picker="inline" min={0} max={50} step={1} />
     <Slider bind:value={$boardMinesCount} label="Mines" disabled={$gameDifficulty !== 'custom'} min={0} bind:max={boardTilesCount} step={1} />
     <Button on:click={handleBoardModify} title="Apply" />
   </Folder>
 
   <!-- Tiles -->
   <Folder title="Tiles" expanded={true}>
-    <Color bind:value={$colors.tiles.odd} label="Color Odd" />
-    <Color bind:value={$colors.tiles.even} label="Color Even" />
-    {#if $tileHover}
-      <Separator />
-      <AutoObject bind:object={$tileHover} />
-    {/if}
-  </Folder>
-
-  <!-- Score -->
-  <Folder title="Score" expanded={true}>
-    <Slider bind:value={$score} label="Current" min={0} step={1} />
-    <ButtonGrid on:click={handleScoreModify} label="Modify" buttons={['+1', '-1']} />
-    <Button on:click={score.reset} title="Reset" />
+    <Checkbox bind:value={$showTilesID} disabled={!$boardRevealed} label="Show IDs" />
+    <Color bind:value={$colors.tiles.normal} label="Normal" />
+    <Color bind:value={$colors.tiles.revealed} label="Revealed" />
+    <Color bind:value={$colors.tiles.mine} label="Mine" />
+    <Color bind:value={$colors.tiles.outline} label="Outline" />
+    <Color bind:value={$colors.tiles.outlineHover} label="Outline Hover" />
   </Folder>
 
   <!-- Timer -->
   <Folder title="Timer" expanded={true}>
     <Text bind:value={humanizedTime} label="Current" disabled />
-    <ButtonGrid on:click={handleTimerModify} label="Modify" buttons={['Start', 'Stop']} />
+    <ButtonGrid on:click={handleTimerModify} label="Actions" buttons={['Start', 'Stop']} />
     <Button on:click={timer.reset} title="Reset" />
   </Folder>
 </Pane>

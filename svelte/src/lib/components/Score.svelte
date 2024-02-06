@@ -1,8 +1,16 @@
 <script lang="ts">
-  import { score } from '$stores/game';
+  import { colors, gameState, score } from '$stores/game';
 </script>
 
-<div>
+<div
+  style="
+    --color-success: {$colors.success};
+    --color-failure: {$colors.failure};
+  "
+  class:active={$gameState === 'ongoing'}
+  class:won={$gameState === 'won'}
+  class:lost={$gameState === 'lost'}
+>
   {$score}
 </div>
 
@@ -22,12 +30,12 @@
       color: #000;
     }
 
-    &.success {
-      color: darken(#b7eecf, 20%);
+    &.won {
+      color: var(--color-success);
     }
 
-    &.failure {
-      color: darken(#fdb4bb, 20%);
+    &.lost {
+      color: var(--color-failure);
     }
   }
 </style>
