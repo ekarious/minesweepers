@@ -1,0 +1,24 @@
+html {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: Inter, serif;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  height: calc(100% - 100px);
+}
+
+#app {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100vh;
+}
+
+*:focus {
+  outline: none;
+  box-shadow: none;
+}
